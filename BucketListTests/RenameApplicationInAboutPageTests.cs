@@ -34,10 +34,10 @@ namespace BucketListTests
             var spanAppName = label?.FormattedText.Spans.Count > 0 ? label?.FormattedText.Spans[0] : null;
 
             // Verify the span exists
-            Assert.False(spanAppName == null, "Appears that the xaml structure has changed other than just renaming the Span with Text='AppName'");
+            Assert.False(spanAppName == null, "Appears that the xaml structure has changed other than just changing `<Span Text=\"{APP_NAME}\" FontAttributes=\"Bold\" FontSize=\"22\"`");
             
             // Verify 'AppName' is changed to 'Bucket List' 
-            Assert.True(spanAppName.Text == BUCKET_LIST, $"The Span with `Text=\"{APP_NAME}\" has not been changed to \"{BUCKET_LIST}\"");
+            Assert.True(spanAppName.Text == BUCKET_LIST, $"The element `<Span Text=\"{APP_NAME}\" FontAttributes=\"Bold\" FontSize=\"22\"` /> has not been changed to Text=\"{BUCKET_LIST}\"");
         }
 
         [Fact(DisplayName = "Add Platform Specific environment name to Resource Dictionary Tests @add-platform-specific-name-to-resource-dictionary")]
@@ -47,23 +47,23 @@ namespace BucketListTests
 
             //Verify the OnPlatform element with x:Key='platformName' has been added
             var about = new BucketList.Views.AboutPage();
-            Assert.True(about.Resources.ContainsKey(PLATFORM_NAME), $"The OnPlatform element with `x:Key=\"{PLATFORM_NAME}\"` was not added to the `ContentPage.Resources\\ResourcesDictionary` element");
+            Assert.True(about.Resources.ContainsKey(PLATFORM_NAME), $"The element `<OnPlatform `x:Key=\"{PLATFORM_NAME}\" />` was not added to the `<ContentPage.Resources><ResourceDictionary>` collection");
             
             //Verify the OnPlatform type is configured as "x:String"
             object pnObj;
             about.Resources.TryGetValue(PLATFORM_NAME, out pnObj);
             var pnType = pnObj.GetType().FullName;
             Assert.True(pnType.Contains("Xamarin.Forms.OnPlatform"), $"The `{PLATFORM_NAME}` resource was not added as an `OnPlatform` element");
-            Assert.True(pnType.Contains("System.String"), $"The `{PLATFORM_NAME}` resource does not contain the property `x:TypeArguments=\"x:String\"`");
+            Assert.True(pnType.Contains("System.String"), $"The `{PLATFORM_NAME}` element does not contain the property `x:TypeArguments=\"x:String\"`");
 
             //Verify OnPlatform contains the iOS declaration
             var pnOnPlatform = pnObj as OnPlatform<string>;
-            Assert.True(pnOnPlatform.Platforms.Any(on => on.Platform.Any(p => p=="iOS")), $"The `{PLATFORM_NAME}` resource does not contain an `<On Platform=\"{IOS}\"...` element    ");
-            Assert.True(pnOnPlatform.Platforms.Any(on => on.Value.Equals("iOS")), $"The `<On Platform=\"{IOS}\"...` element does not contain a value of \"{IOS}\" ");
+            Assert.True(pnOnPlatform.Platforms.Any(on => on.Platform.Any(p => p=="iOS")), $"The `{PLATFORM_NAME}` resource does not contain an `<On Platform=\"{IOS}\" Value=\"{IOS}\" />` element ");
+            Assert.True(pnOnPlatform.Platforms.Any(on => on.Value.Equals("iOS")), $"The `<On Platform=\"{IOS}\" />` element does not contain a value of \"{IOS}\" ");
 
             //Verify OnPlatform contains the Android declaration
-            Assert.True(pnOnPlatform.Platforms.Any(on => on.Platform.Any(p => p == "Android")), $"The `{PLATFORM_NAME}` resource does not contain an `<On Platform=\"{ANDROID}\"...` element    ");
-            Assert.True(pnOnPlatform.Platforms.Any(on => on.Value.Equals("Android")), $"The `<On Platform=\"{ANDROID}\"...` element does not contain a value of \"{ANDROID}\" ");
+            Assert.True(pnOnPlatform.Platforms.Any(on => on.Platform.Any(p => p == "Android")), $"The `{PLATFORM_NAME}` resource does not contain an `<On Platform=\"{ANDROID}\" Value=\"{ANDROID}\" />` element    ");
+            Assert.True(pnOnPlatform.Platforms.Any(on => on.Value.Equals("Android")), $"The `<On Platform=\"{ANDROID}\" />` element does not contain a value of \"{ANDROID}\" ");
         }
 
         [Fact(DisplayName = "Add the `platformName` resource to the application name Tests @add-platformName-to-bucketlist")]
