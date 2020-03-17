@@ -24,7 +24,7 @@ namespace BucketListTests
             return label;
         }
 
-        [Fact(DisplayName = "Change 'AppName' displayed on About page to 'Bucket List' Tests @change-appname-to-bucketlist")]
+        [Fact(DisplayName = "1. Change 'AppName' displayed on About page to 'Bucket List' Tests @change-appname-to-bucketlist")]
         public void ChangeAppNameToBucketListTest()
         {
             MockForms.Init();
@@ -40,7 +40,7 @@ namespace BucketListTests
             Assert.True(spanAppName.Text == BUCKET_LIST, $"The element `<Span Text=\"{APP_NAME}\" FontAttributes=\"Bold\" FontSize=\"22\"` /> has not been changed to Text=\"{BUCKET_LIST}\"");
         }
 
-        [Fact(DisplayName = "Add Platform Specific environment name to Resource Dictionary Tests @add-platform-specific-name-to-resource-dictionary")]
+        [Fact(DisplayName = "2. Add Platform Specific environment name to Resource Dictionary Tests @add-platform-specific-name-to-resource-dictionary")]
         public void AddPlatformSpecificEnvironmentNameResourceDictionary()
         {
             MockForms.Init();
@@ -66,7 +66,7 @@ namespace BucketListTests
             Assert.True(pnOnPlatform.Platforms.Any(on => on.Value.Equals("Android")), $"The `<On Platform=\"{ANDROID}\" />` element does not contain a value of \"{ANDROID}\" ");
         }
 
-        [Fact(DisplayName = "Add the `platformName` resource to the application name Tests @add-platformName-to-bucketlist")]
+        [Fact(DisplayName = "3. Add the `platformName` resource to the application name Tests @add-platformName-to-bucketlist")]
         public void AddPlatformNameToBucketListTest()
         {
             // Create an Android instance of the Xamarin.Forms application to test the OnPlatform Resource
