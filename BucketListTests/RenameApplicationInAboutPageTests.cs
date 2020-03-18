@@ -34,10 +34,10 @@ namespace BucketListTests
             var spanAppName = label?.FormattedText.Spans.Count > 0 ? label?.FormattedText.Spans[0] : null;
 
             // Verify the span exists
-            Assert.False(spanAppName == null, "Appears that the xaml structure has changed other than just changing `<Span Text=\"{APP_NAME}\" FontAttributes=\"Bold\" FontSize=\"22\"`");
+            Assert.False(spanAppName == null, $"Appears that the xaml structure has changed other than just changing `<Span Text=\"{APP_NAME}\" FontAttributes=\"Bold\" FontSize=\"22\"`");
             
             // Verify 'AppName' is changed to 'Bucket List' 
-            Assert.True(spanAppName.Text == BUCKET_LIST, $"The element `<Span Text=\"{APP_NAME}\" FontAttributes=\"Bold\" FontSize=\"22\"` /> has not been changed to Text=\"{BUCKET_LIST}\"");
+            Assert.True(spanAppName.Text == BUCKET_LIST, $"`\"{APP_NAME}\"` was not changed to `\"{BUCKET_LIST}\"`");
         }
 
         [Fact(DisplayName = "2. Add Platform Specific environment name to Resource Dictionary Tests @add-platform-specific-name-to-resource-dictionary")]
@@ -47,13 +47,13 @@ namespace BucketListTests
 
             //Verify the OnPlatform element with x:Key='platformName' has been added
             var about = new BucketList.Views.AboutPage();
-            Assert.True(about.Resources.ContainsKey(PLATFORM_NAME), $"The element `<OnPlatform `x:Key=\"{PLATFORM_NAME}\" />` was not added to the `<ContentPage.Resources><ResourceDictionary>` collection");
+            Assert.True(about.Resources.ContainsKey(PLATFORM_NAME), $"The `<OnPlatform x:Key=\"{PLATFORM_NAME}\" />` element was not added to the `<ContentPage.Resources><ResourceDictionary>` collection");
             
             //Verify the OnPlatform type is configured as "x:String"
             object pnObj;
             about.Resources.TryGetValue(PLATFORM_NAME, out pnObj);
             var pnType = pnObj.GetType().FullName;
-            Assert.True(pnType.Contains("Xamarin.Forms.OnPlatform"), $"The `{PLATFORM_NAME}` resource was not added as an `OnPlatform` element");
+            Assert.True(pnType.Contains("Xamarin.Forms.OnPlatform"), $"The `{PLATFORM_NAME}` resource was not added as an `<OnPlatform />` element");
             Assert.True(pnType.Contains("System.String"), $"The `{PLATFORM_NAME}` element does not contain the property `x:TypeArguments=\"x:String\"`");
 
             //Verify OnPlatform contains the iOS declaration
@@ -75,12 +75,12 @@ namespace BucketListTests
             // Verify the overall structure has not been changed
             var label = RetrieveFirstLabel();
             var spanPlatformName = label?.FormattedText.Spans[2];
-            Assert.False(spanPlatformName == null, "Appears that the xaml structure has changed other than adding <Span Text=\"{ StaticResource platformName}\" /> ");
+            Assert.False(spanPlatformName == null, "Appears that the xaml structure has changed other than adding `<Span Text=\"{ StaticResource platformName}\" />` ");
 
             // Verify that 1) the Span has been added and 2) has been added in the correct position
             var spanIDX = label?.FormattedText.Spans.ToList().FindIndex(s => s.Text == ANDROID);
-            Assert.False(spanIDX == -1, $"Missing element <Span Text =\"{{StaticResource {PLATFORM_NAME}}}\" />");
-            Assert.True(spanIDX == 2, $"<Span Text=\"{{StaticResource {PLATFORM_NAME}}}\" /> is not in the third Span");
+            Assert.False(spanIDX == -1, $"The `<Formatted.Spans>` collection is missing the `<Span Text =\"{{StaticResource {PLATFORM_NAME}}}\"` />");
+            Assert.True(spanIDX == 2, $"`<Span Text=\"{{StaticResource {PLATFORM_NAME}}}\" />` is not added as the third Span");
             
         }
 
