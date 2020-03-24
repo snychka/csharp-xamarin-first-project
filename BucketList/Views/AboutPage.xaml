@@ -17,7 +17,11 @@
             <Color x:Key="Primary">#2196F3</Color>
             <Color x:Key="Accent">#96d1ff</Color>
             <Color x:Key="LightTextColor">#999999</Color>
-            <!-- Replace with the Platform-Specific Element -->
+            <OnPlatform x:Key="PlatformName"
+                        x:TypeArguments="x:String">
+                <On Platform="iOS" Value="iOS" />
+                <On Platform="Android" Value="Android" />
+            </OnPlatform>
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -39,9 +43,9 @@
                     <Label.FormattedText>
                         <FormattedString>
                             <FormattedString.Spans>
-                                <Span Text="AppName" FontAttributes="Bold" FontSize="22" />
+                                <Span Text="Bucket List" FontAttributes="Bold" FontSize="22" />
                                 <Span Text=" " />
-                                <!-- Replace with the PlatformName resource in a Span element -->
+                                <Span Text="{StaticResource PlatformName}" />
                                 <Span Text=" 1.0" ForegroundColor="{StaticResource LightTextColor}" />
                             </FormattedString.Spans>
                         </FormattedString>
