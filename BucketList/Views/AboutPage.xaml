@@ -17,6 +17,7 @@
             <Color x:Key="Primary">#2196F3</Color>
             <Color x:Key="Accent">#96d1ff</Color>
             <Color x:Key="LightTextColor">#999999</Color>
+            <!-- Replace with the Platform-Specific Element -->
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -40,6 +41,7 @@
                             <FormattedString.Spans>
                                 <Span Text="AppName" FontAttributes="Bold" FontSize="22" />
                                 <Span Text=" " />
+                                <!-- Replace with the PlatformName resource in a Span element -->
                                 <Span Text=" 1.0" ForegroundColor="{StaticResource LightTextColor}" />
                             </FormattedString.Spans>
                         </FormattedString>
