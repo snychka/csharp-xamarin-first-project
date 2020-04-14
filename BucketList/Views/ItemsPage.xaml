@@ -37,6 +37,7 @@
                 <DataTemplate>
                     <ViewCell>
                         <StackLayout Padding="10">
+                            <!-- Add CheckBox element here -->
                             <Label Text="{Binding Text}" 
                                     d:Text="{Binding .}"
                                     LineBreakMode="NoWrap" 
