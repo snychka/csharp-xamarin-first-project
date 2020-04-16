@@ -45,14 +45,13 @@ namespace BucketListTests
             MockForms.Init();
 
             var layout = RetrieveListViewLayout();
-            Assert.False(layout.Children.Count > 2, "Too many changes have been made within the parent `<StackLayout>` element ");
+            Assert.True(layout.Children.Count > 1, "Too many changes have been made within the parent `<StackLayout>` element ");
 
             var secondElement = layout.Children[1];
 
-            Assert.False(secondElement is Label, "The `<StackLayout>` element has not been added after the `<CheckBox />` ");
-
+            Assert.True(secondElement is StackLayout, "The `<StackLayout>` element has not been added after the `<CheckBox />` ");
             var stackLayout = secondElement as StackLayout;
-            Assert.True(stackLayout.Children.Count == 2, "The `<Label />`s have not been added to the `<StackLayout>` element ");
+            Assert.True(stackLayout.Children.Count == 2, "The `<Label />`s have not been added as children within the new `<StackLayout>` element ");
         }
 
         [Fact(DisplayName = "3. Align the `CheckBox` to the left of the `StackLayout` @align-checkbox-to-left-of-labels")]
@@ -61,7 +60,7 @@ namespace BucketListTests
             MockForms.Init();
 
             var layout = RetrieveListViewLayout();
-            Assert.True(layout.Orientation == StackOrientation.Horizontal, "The `Orientation` of the outermost `<StackLayout>` has not been set to `\"Horizontal\"` ");
+            Assert.True(layout.Orientation == StackOrientation.Horizontal, "The `Orientation` property of the outermost `<StackLayout>` has not been set to `\"Horizontal\"` ");
         }
 
         [Fact(DisplayName = "4. Fix the visual spacing between elements @fix-visual-spacing-items-page")]
