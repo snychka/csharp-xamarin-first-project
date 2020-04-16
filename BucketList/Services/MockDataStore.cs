@@ -9,6 +9,7 @@ namespace BucketList.Services
     public class MockDataStore : IDataStore<Item>
     {
         readonly List<Item> items;
+        private string missionStatement = "";
 
         public MockDataStore()
         {
@@ -55,6 +56,18 @@ namespace BucketList.Services
         public async Task<IEnumerable<Item>> GetItemsAsync(bool forceRefresh = false)
         {
             return await Task.FromResult(items);
+        }
+
+        public async Task<bool> UpdateMission(string mission)
+        {
+            missionStatement = mission;
+
+            return await Task.FromResult(true);
+        }
+
+        public async Task<string> GetMission()
+        {
+            return await Task.FromResult(missionStatement);
         }
     }
 }
