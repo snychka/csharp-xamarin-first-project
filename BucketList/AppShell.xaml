@@ -33,12 +33,14 @@
     <TabBar>
         <Tab Title="Browse" Icon="tab_feed.png">
             <local:ItemsPage />
+            <!-- Add NewItemPage element here -->
         </Tab>
+        <!-- Add MissionPage element here -->
         <Tab Title="About" Icon="tab_about.png">
             <ShellContent ContentTemplate="{DataTemplate local:AboutPage}" />
         </Tab>
     </TabBar>
-
+    
     <!-- Optional Templates 
     // These may be provided inline as below or as separate classes.
 
