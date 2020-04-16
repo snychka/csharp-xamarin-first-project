@@ -58,13 +58,13 @@ namespace BucketListTests
             ConvertToShellAppTest();
             Assert.False(shell.CurrentItem.Items.Count < 3, "The `MissionPage` has not been added to the `<TabBar>` collection");
 
-            Assert.False(shell.CurrentItem.Items[1].CurrentItem.Content is MissionPage, "The second item of the `<TabBar>` is still a direct reference to `<local:MissionPage/>`");
-            Assert.False(shell.CurrentItem.Items[1].CurrentItem.ContentTemplate is null, "The second item of the `<TabBar>` is not declared as a `<ShellContent />` element  ");
+            Assert.False(shell.CurrentItem.Items[1].CurrentItem.Content is MissionPage, "The second element of the `<TabBar>` is still a direct reference to `<local:MissionPage/>`");
+            Assert.False(shell.CurrentItem.Items[1].CurrentItem.ContentTemplate is null, "The second element of the `<TabBar>` is not declared as a `<ShellContent />` element  ");
 
             var missionPage = shell.CurrentItem.Items[1].CurrentItem.ContentTemplate.CreateContent();
-            Assert.True(missionPage is MissionPage, "The second item of the `<TabBar>` has not declared as `<ShellContent ContentTemplate=\"{ DataTemplate local:MissionPage}\" />`");
+            Assert.True(missionPage is MissionPage, "The second element of the `<TabBar>` has not declared as `<ShellContent ContentTemplate=\"{ DataTemplate local:MissionPage}\" />`");
 
-            Assert.True(shell.CurrentItem.Items[1].CurrentItem.Title == "Mission", "The second item of the `<TabBar>` is missing `Title=\"Mission\"`");
+            Assert.True(shell.CurrentItem.Items[1].CurrentItem.Title == "Mission", "The new `MissionPage` declartion in the `<TabBar>` is missing the `Title=\"Mission\"`");
         }
 
         [Fact(DisplayName = "4. Change navigation from Tabs to a Flyout menu @convert-to-flyoutitem")]
@@ -87,23 +87,30 @@ namespace BucketListTests
         {
             Assert.True(UserHasCreatedSecondFlyoutItem(), "The secondary `<FlyoutItem>` has not been declared");
             var secondaryFlyout = shell.Items[1] as FlyoutItem;
-            Assert.True(secondaryFlyout.Title.Equals("About"), "The `Title` of the secondary `<FlyoutItem>` has not been set to `\"About\"`");
-            Assert.True(secondaryFlyout.CurrentItem.Items.Count > 0, "The secondary `<FlyoutItem>` does not contain any items");
-
-            var firstFlyout = shell.Items[0] as FlyoutItem;
-            Assert.True(firstFlyout.Title == "Bucket List", "The first `<FlyoutItem>` has not been given a property of `Title=\"Bucket List\"`");
-            Assert.True(firstFlyout.FlyoutDisplayOptions == FlyoutDisplayOptions.AsSingleItem, "The first `<FlyoutItem>` has not changed the property `FlyoutDisplayOptions=\"AsSingleItem\"`");
-        
+            Assert.False(secondaryFlyout.CurrentItem is null, "The secondary `<FlyoutItem>` does not contain any elements");
+            Assert.False(secondaryFlyout.CurrentItem.CurrentItem is null, "The secondary `<FlyoutItem>` contains a `<Tab>` which does not contain any elements");
+            Assert.True(secondaryFlyout.Title == "About", "The `Title` of the secondary `<FlyoutItem>` has not been set to `\"About\"`");
+            
+            
         }
 
-        [Fact(DisplayName = "7. Create tertiary navigation layer @create-tiertiary-navigation")]
+        [Fact(DisplayName = "7. Separate items between the Flyout menu and Tab bar @separate-flyoutitems-and-tabs")]
+        public void SeparateFlyoutitemsAndTabs()
+        {
+            var firstFlyout = shell.Items[0] as FlyoutItem;
+            Assert.True(firstFlyout.FlyoutDisplayOptions == FlyoutDisplayOptions.AsSingleItem, "The `FlyoutDisplayOptions` property of the first `<FlyoutItem>` has not been changed to `\"AsSingleItem\"`");
+            Assert.True(firstFlyout.Title == "Bucket List", "The first `<FlyoutItem>` has not been given a property of `Title=\"Bucket List\"`");
+            Assert.True(firstFlyout.CurrentItem.Title == "List", "The `<Tab>` with `Title=\"Browse\"` needs to be changed to `Title=\"List\"` ");
+        }
+
+        [Fact(DisplayName = "8. Create tertiary navigation layer @create-tiertiary-navigation")]
         public void CreateTiertiaryNavigationTest()
         {
             var firstFlyout = shell.Items[0] as FlyoutItem;
             var firstTab = firstFlyout.Items[0];
 
-            Assert.True(firstTab.Items.Count > 1, "The page `<local:NewItemPage />` has not been added to the first `<Tab>` of the first `<FlyoutItem>` ");
-            Assert.True(firstTab.Items[1].Content is NewItemPage, "The page `<local:NewItemPage />` has not been added to the first `<Tab>` of the first `<FlyoutItem>` ");
+            Assert.True(firstTab.Items.Count > 1, "The declaration `<local:NewItemPage />` has not been added to the first `<Tab>` of the first `<FlyoutItem>` ");
+            Assert.True(firstTab.Items[1].Content is NewItemPage, "The declaration `<local:NewItemPage />` has not been added to the first `<Tab>` of the first `<FlyoutItem>` ");
         }
     }
 }
