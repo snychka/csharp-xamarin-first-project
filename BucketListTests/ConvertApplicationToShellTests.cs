@@ -12,32 +12,33 @@ using Xunit;
 namespace BucketListTests
 {
     public class ConvertApplicationToShellTests
-    {
-        private Application app;
-        private AppShell shell;
+    {       
+
         public ConvertApplicationToShellTests()
         {
             MockForms.Init();
-            app = new App();
-            shell = app.MainPage as AppShell;
+            Application.Current = new App();
         }
 
         private bool UserHasCreatedSecondFlyoutItem()
         {
+            var shell = ConvertToShellAppTest();
             return shell.Items.Count > 1;
         }
 
         [Fact(DisplayName = "1. Convert to the Xamarin.Forms Shell Application type  @set-mainpage-property")]
-        public void ConvertToShellAppTest()
-        {            
-            Assert.True(app.MainPage is AppShell,"The `MainPage` property of `App.xml.cs` file has not been changed to an instance of `new AppShell()`");
+        public AppShell ConvertToShellAppTest()
+        {
+            var appShell = Application.Current.MainPage as AppShell;
+            Assert.False(appShell is null ,"The `MainPage` property of `App.xml.cs` file has not been changed to an instance of `new AppShell()`");
+            return appShell;
         }
 
         [Fact(DisplayName = "2. Add the MissionPage to the application @add-missionpage-as-new-tab")]
         public void AddMissionPageTest()
         {
             if (UserHasCreatedSecondFlyoutItem()) return;
-            ConvertToShellAppTest();
+            var shell = ConvertToShellAppTest();
             Assert.False(shell.CurrentItem.Items.Count < 3, "The `MissionPage` has not been added to the `<TabBar>` collection");
             
             if (shell.CurrentItem.Items[1].CurrentItem.ContentTemplate is null)
@@ -55,7 +56,7 @@ namespace BucketListTests
         public void ConvertMissionTabToDyanmicTest()
         {
             if (UserHasCreatedSecondFlyoutItem()) return;
-            ConvertToShellAppTest();
+            var shell = ConvertToShellAppTest();
             Assert.False(shell.CurrentItem.Items.Count < 3, "The `MissionPage` has not been added to the `<TabBar>` collection");
 
             Assert.False(shell.CurrentItem.Items[1].CurrentItem.Content is MissionPage, "The second element of the `<TabBar>` is still a direct reference to `<local:MissionPage/>`");
@@ -71,6 +72,7 @@ namespace BucketListTests
         public void ChangeNavigationToFlyoutMenuTest()
         {
             if (UserHasCreatedSecondFlyoutItem()) return;
+            var shell = ConvertToShellAppTest();
             Assert.True(shell.Items[0].Route.Contains("FlyoutItem"), "The `<TabBar>` declaration has not been changed to `<FlyoutItem>`");
             
         }
@@ -79,6 +81,7 @@ namespace BucketListTests
         public void AddItemsToFlyoutMenuTest()
         {
             if (UserHasCreatedSecondFlyoutItem()) return;
+            var shell = ConvertToShellAppTest();
             Assert.True(shell.CurrentItem.FlyoutDisplayOptions == FlyoutDisplayOptions.AsMultipleItems, "The first `<FlyoutItem>` delcaration is not configured with the property `FlyoutDisplayOptions=\"AsMultipleItems\"`");
         }
 
@@ -86,6 +89,7 @@ namespace BucketListTests
         public void CreateSecondaryNavigationTest()
         {
             Assert.True(UserHasCreatedSecondFlyoutItem(), "The secondary `<FlyoutItem>` has not been declared");
+            var shell = ConvertToShellAppTest();
             var secondaryFlyout = shell.Items[1] as FlyoutItem;
             Assert.False(secondaryFlyout.CurrentItem is null, "The secondary `<FlyoutItem>` does not contain any elements");
             Assert.False(secondaryFlyout.CurrentItem.CurrentItem is null, "The secondary `<FlyoutItem>` contains a `<Tab>` which does not contain any elements");
@@ -97,6 +101,7 @@ namespace BucketListTests
         [Fact(DisplayName = "7. Separate items between the Flyout menu and Tab bar @separate-flyoutitems-and-tabs")]
         public void SeparateFlyoutitemsAndTabs()
         {
+            var shell = ConvertToShellAppTest();
             var firstFlyout = shell.Items[0] as FlyoutItem;
             Assert.True(firstFlyout.FlyoutDisplayOptions == FlyoutDisplayOptions.AsSingleItem, "The `FlyoutDisplayOptions` property of the first `<FlyoutItem>` has not been changed to `\"AsSingleItem\"`");
             Assert.True(firstFlyout.Title == "Bucket List", "The first `<FlyoutItem>` has not been given a property of `Title=\"Bucket List\"`");
@@ -106,6 +111,7 @@ namespace BucketListTests
         [Fact(DisplayName = "8. Create tertiary navigation layer @create-tiertiary-navigation")]
         public void CreateTiertiaryNavigationTest()
         {
+            var shell = ConvertToShellAppTest();
             var firstFlyout = shell.Items[0] as FlyoutItem;
             var firstTab = firstFlyout.Items[0];
 

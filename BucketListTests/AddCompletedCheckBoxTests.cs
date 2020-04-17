@@ -15,7 +15,7 @@ namespace BucketListTests
         public AddCompletedCheckBoxTests()
         {
             MockForms.Init();
-            var newItem = new NewItemPage();
+            newItem = new NewItemPage();
             content = newItem.Content as StackLayout;
         }
 

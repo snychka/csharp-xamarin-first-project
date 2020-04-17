@@ -13,9 +13,6 @@ namespace BucketListTests
 {
     public class AddCompletedCheckBoxToItemsPageTests
     {
-        ItemsPage itemsPage = new ItemsPage();
-        ListView listView;
-        StackLayout layout;
 
         public AddCompletedCheckBoxToItemsPageTests()
         {
@@ -24,14 +21,12 @@ namespace BucketListTests
 
         private StackLayout RetrieveListViewLayout()
         {
-            if (listView == null)
-                listView = itemsPage.FindByName<ListView>("ItemsListView");
-
+            var itemsPage = new ItemsPage();
+            var listView = itemsPage.FindByName<ListView>("ItemsListView");
             Assert.False(listView is null, $"The `<ListView />` with `x:Name=\"ItemsListView\"` has been removed");
 
-            if (layout == null)
-                layout = (listView.ItemTemplate.CreateContent() as ViewCell)?.View as StackLayout;
-            Assert.False(layout is null, "The core `<ListView.ItemTemplate>` structure has been changed"); 
+            var layout = (listView.ItemTemplate.CreateContent() as ViewCell)?.View as StackLayout;
+            Assert.False(layout is null, "The core `<ListView.ItemTemplate>` structure has been changed");
 
             return layout;
 
@@ -40,7 +35,6 @@ namespace BucketListTests
         [Fact(DisplayName = "1. Add an IsCompleted `CheckBox` to the `ListView`'s `DataTemplate` @add-iscompleted-checkbox-to-listview")]
         public void ChangeAppNameToBucketListTest()
         {
-            
             var layout = RetrieveListViewLayout();
             Assert.True(layout.Children.Count > 1, "The parent `<StackLayout>` does not contain any elements.");
             var checkBox = layout.Children[0] as CheckBox;
@@ -74,10 +68,10 @@ namespace BucketListTests
         {
             var layout = RetrieveListViewLayout();
             Assert.True(layout.Padding.Equals(new Thickness(0, 0, 0, 0)), "The `Padding` property has not been removed from the outermost `<StackLayout>` ");
-            
+
             var checkBox = layout.Children[0] as CheckBox;
             Assert.True(checkBox?.Margin.Equals(new Thickness(10, 0, 0, 0)), "The `Margin` property of the `<CheckBox />` element has not been set to `\"10,0,0,0\"`");
-            
+
             var innerStack = layout.Children[1] as StackLayout;
             Assert.True(innerStack?.Padding.Equals(new Thickness(10, 10, 10, 10)), "The `Padding` property of the innermost `<StackLayout>` has not been set to `\"10\"`");
         }
