@@ -38,6 +38,7 @@
                     <ViewCell>
                         <StackLayout Padding="10">
                             <!-- Add CheckBox element here -->
+                            <!-- Add StackLayout element here -->
                             <Label Text="{Binding Text}" 
                                     d:Text="{Binding .}"
                                     LineBreakMode="NoWrap" 
@@ -48,6 +49,7 @@
                                     LineBreakMode="NoWrap"
                                     Style="{DynamicResource ListItemDetailTextStyle}"
                                     FontSize="13" />
+                            <!-- Add closing StackLayout here -->
                         </StackLayout>
                     </ViewCell>
                 </DataTemplate>

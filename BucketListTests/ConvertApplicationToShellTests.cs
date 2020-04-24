@@ -1,6 +1,7 @@
 using BucketList;
 using BucketList.Models;
 using BucketList.ViewModels;
+using BucketList.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,77 +12,111 @@ using Xunit;
 namespace BucketListTests
 {
     public class ConvertApplicationToShellTests
-    {
-        //@set-mainpage-property
-        //@add-missionpage-as-new-tab
-        //@add-title-to-missionpage
-        //@convert-to-flyoutitem
-        //@add-items-to-flyout-menu
-        //@create-secondary-navigation?
-        //@create-tiertiary-navigation?
-        [Fact(DisplayName = "1. Add an IsCompleted `CheckBox` to the `ListView`'s `DataTemplate` @add-iscompleted-checkbox-to-listview")]
-        public void ConverToShellAppTest()
+    {       
+
+        public ConvertApplicationToShellTests()
         {
             MockForms.Init();
-            var app = new App();
-            var test = app.MainPage;
-
-            var t = "";
-            //var layout = RetrieveListViewLayout();
-            //var checkBox = layout.Children[0] as CheckBox;
-            //Assert.False(checkBox is null, "The `<CheckBox />` element has not been added to the ViewCell collection"); //TODO 
-
-            // Note: We are not able to test for the Binding configuration due to limitations in testing Xamarin.Forms
+            Application.Current = new App();
         }
-        // @wrap-labels-in-stack-layout
 
-        // @align-checkbox-to-left-of-labels
-
-        // @fix-visual-spacing-items-page
-        /*
-        [Fact(DisplayName = "2. Add Platform Specific environment name to Resource Dictionary Tests @add-platform-specific-name-to-resource-dictionary")]
-        public void AddPlatformSpecificEnvironmentNameResourceDictionary()
+        private bool UserHasCreatedSecondFlyoutItem()
         {
-            MockForms.Init();
-
-            //Verify the OnPlatform element with x:Key='platformName' has been added
-            var about = new BucketList.Views.AboutPage();
-            Assert.True(about.Resources.ContainsKey(PLATFORM_NAME), $"The `<OnPlatform x:Key=\"{PLATFORM_NAME}\" />` element was not added to the `<ContentPage.Resources><ResourceDictionary>` collection");
-            
-            //Verify the OnPlatform type is configured as "x:String"
-            object pnObj;
-            about.Resources.TryGetValue(PLATFORM_NAME, out pnObj);
-            var pnType = pnObj.GetType().FullName;
-            Assert.True(pnType.Contains("Xamarin.Forms.OnPlatform"), $"The `{PLATFORM_NAME}` resource was not added as an `<OnPlatform />` element");
-            Assert.True(pnType.Contains("System.String"), $"The `{PLATFORM_NAME}` element does not contain the property `x:TypeArguments=\"x:String\"`");
-
-            //Verify OnPlatform contains the iOS declaration
-            var pnOnPlatform = pnObj as OnPlatform<string>;
-            Assert.True(pnOnPlatform.Platforms.Any(on => on.Platform.Any(p => p=="iOS")), $"The `{PLATFORM_NAME}` resource does not contain an `<On Platform=\"{IOS}\" Value=\"{IOS}\" />` element ");
-            Assert.True(pnOnPlatform.Platforms.Any(on => on.Value.Equals("iOS")), $"The `<On Platform=\"{IOS}\" />` element does not contain a value of \"{IOS}\" ");
-
-            //Verify OnPlatform contains the Android declaration
-            Assert.True(pnOnPlatform.Platforms.Any(on => on.Platform.Any(p => p == "Android")), $"The `{PLATFORM_NAME}` resource does not contain an `<On Platform=\"{ANDROID}\" Value=\"{ANDROID}\" />` element    ");
-            Assert.True(pnOnPlatform.Platforms.Any(on => on.Value.Equals("Android")), $"The `<On Platform=\"{ANDROID}\" />` element does not contain a value of \"{ANDROID}\" ");
+            var shell = ConvertToShellAppTest();
+            return shell.Items.Count > 1;
         }
 
-        [Fact(DisplayName = "3. Add the `platformName` resource to the application name Tests @add-platformName-to-bucketlist")]
-        public void AddPlatformNameToBucketListTest()
+        [Fact(DisplayName = "1. Convert to the Xamarin.Forms Shell Application type  @set-mainpage-property")]
+        public AppShell ConvertToShellAppTest()
         {
-            // Create an Android instance of the Xamarin.Forms application to test the OnPlatform Resource
-            MockForms.Init(Device.Android);
+            var appShell = Application.Current.MainPage as AppShell;
+            Assert.False(appShell is null ,"The `MainPage` property of `App.xml.cs` file has not been changed to an instance of `new AppShell()`");
+            return appShell;
+        }
 
-            // Verify the overall structure has not been changed
-            var label = RetrieveFirstLabel();
-            var spanPlatformName = label?.FormattedText.Spans[2];
-            Assert.False(spanPlatformName == null, "Appears that the xaml structure has changed other than adding `<Span Text=\"{ StaticResource platformName}\" />` ");
+        [Fact(DisplayName = "2. Add the MissionPage to the application @add-missionpage-as-new-tab")]
+        public void AddMissionPageTest()
+        {
+            if (UserHasCreatedSecondFlyoutItem()) return;
+            var shell = ConvertToShellAppTest();
+            Assert.False(shell.CurrentItem.Items.Count < 3, "The `MissionPage` has not been added to the `<TabBar>` collection");
+            
+            if (shell.CurrentItem.Items[1].CurrentItem.ContentTemplate is null)
+            {
+                Assert.True(shell.CurrentItem.Items[1].CurrentItem.Content is MissionPage, "The `MissionPage` has not been added to the `<TabBar>` collection");
+            }
+            else
+            {
+                var secondTab = shell.CurrentItem.Items[1].CurrentItem.ContentTemplate.CreateContent();
+                Assert.False(secondTab is AboutPage, "The second item of the `<TabBar>` is still pointing to the `AboutPage`");
+            }            
+        }
 
-            // Verify that 1) the Span has been added and 2) has been added in the correct position
-            var spanIDX = label?.FormattedText.Spans.ToList().FindIndex(s => s.Text == ANDROID);
-            Assert.False(spanIDX == -1, $"The `<Formatted.Spans>` collection is missing the `<Span Text =\"{{StaticResource {PLATFORM_NAME}}}\"` />");
-            Assert.True(spanIDX == 2, $"`<Span Text=\"{{StaticResource {PLATFORM_NAME}}}\" />` is not added as the third Span");
+        [Fact(DisplayName = "3. Convert the MissionPage declaration to dynamically load the page @convert-mission-tab-to-dynamic-load")]
+        public void ConvertMissionTabToDyanmicTest()
+        {
+            if (UserHasCreatedSecondFlyoutItem()) return;
+            var shell = ConvertToShellAppTest();
+            Assert.False(shell.CurrentItem.Items.Count < 3, "The `MissionPage` has not been added to the `<TabBar>` collection");
+
+            Assert.False(shell.CurrentItem.Items[1].CurrentItem.Content is MissionPage, "The second element of the `<TabBar>` is still a direct reference to `<local:MissionPage/>`");
+            Assert.False(shell.CurrentItem.Items[1].CurrentItem.ContentTemplate is null, "The second element of the `<TabBar>` is not declared as a `<ShellContent />` element  ");
+
+            var missionPage = shell.CurrentItem.Items[1].CurrentItem.ContentTemplate.CreateContent();
+            Assert.True(missionPage is MissionPage, "The second element of the `<TabBar>` has not declared as `<ShellContent ContentTemplate=\"{ DataTemplate local:MissionPage}\" />`");
+
+            Assert.True(shell.CurrentItem.Items[1].CurrentItem.Title == "Mission", "The new `MissionPage` declartion in the `<TabBar>` is missing the `Title=\"Mission\"`");
+        }
+
+        [Fact(DisplayName = "4. Change navigation from Tabs to a Flyout menu @convert-to-flyoutitem")]
+        public void ChangeNavigationToFlyoutMenuTest()
+        {
+            if (UserHasCreatedSecondFlyoutItem()) return;
+            var shell = ConvertToShellAppTest();
+            Assert.True(shell.Items[0].Route.Contains("FlyoutItem"), "The `<TabBar>` declaration has not been changed to `<FlyoutItem>`");
             
         }
-        */
+
+        [Fact(DisplayName = "5. Add items to the Flyout menu @add-items-to-flyout-menu")]
+        public void AddItemsToFlyoutMenuTest()
+        {
+            if (UserHasCreatedSecondFlyoutItem()) return;
+            var shell = ConvertToShellAppTest();
+            Assert.True(shell.CurrentItem.FlyoutDisplayOptions == FlyoutDisplayOptions.AsMultipleItems, "The first `<FlyoutItem>` delcaration is not configured with the property `FlyoutDisplayOptions=\"AsMultipleItems\"`");
+        }
+
+        [Fact(DisplayName = "6. Create a secondary navigation layer @create-secondary-navigation")]
+        public void CreateSecondaryNavigationTest()
+        {
+            Assert.True(UserHasCreatedSecondFlyoutItem(), "The secondary `<FlyoutItem>` has not been declared");
+            var shell = ConvertToShellAppTest();
+            var secondaryFlyout = shell.Items[1] as FlyoutItem;
+            Assert.False(secondaryFlyout.CurrentItem is null, "The secondary `<FlyoutItem>` does not contain any elements");
+            Assert.False(secondaryFlyout.CurrentItem.CurrentItem is null, "The secondary `<FlyoutItem>` contains a `<Tab>` which does not contain any elements");
+            Assert.True(secondaryFlyout.Title == "About", "The `Title` of the secondary `<FlyoutItem>` has not been set to `\"About\"`");
+            
+            
+        }
+
+        [Fact(DisplayName = "7. Separate items between the Flyout menu and Tab bar @separate-flyoutitems-and-tabs")]
+        public void SeparateFlyoutitemsAndTabs()
+        {
+            var shell = ConvertToShellAppTest();
+            var firstFlyout = shell.Items[0] as FlyoutItem;
+            Assert.True(firstFlyout.FlyoutDisplayOptions == FlyoutDisplayOptions.AsSingleItem, "The `FlyoutDisplayOptions` property of the first `<FlyoutItem>` has not been changed to `\"AsSingleItem\"`");
+            Assert.True(firstFlyout.Title == "Bucket List", "The first `<FlyoutItem>` has not been given a property of `Title=\"Bucket List\"`");
+            Assert.True(firstFlyout.CurrentItem.Title == "List", "The `<Tab>` with `Title=\"Browse\"` needs to be changed to `Title=\"List\"` ");
+        }
+
+        [Fact(DisplayName = "8. Create tertiary navigation layer @create-tiertiary-navigation")]
+        public void CreateTiertiaryNavigationTest()
+        {
+            var shell = ConvertToShellAppTest();
+            var firstFlyout = shell.Items[0] as FlyoutItem;
+            var firstTab = firstFlyout.Items[0];
+
+            Assert.True(firstTab.Items.Count > 1, "The declaration `<local:NewItemPage />` has not been added to the first `<Tab>` of the first `<FlyoutItem>` ");
+            Assert.True(firstTab.Items[1].Content is NewItemPage, "The declaration `<local:NewItemPage />` has not been added to the first `<Tab>` of the first `<FlyoutItem>` ");
+        }
     }
 }

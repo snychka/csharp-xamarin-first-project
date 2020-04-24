@@ -14,6 +14,11 @@ namespace BucketListTests
         string IOS = "iOS";
         string ANDROID = "Android";
 
+        public RenameApplicationInAboutPageTests()
+        {
+            MockForms.Init();
+        }
+
         private Label RetrieveFirstLabel()
         {
             var about = new BucketList.Views.AboutPage();
@@ -27,8 +32,6 @@ namespace BucketListTests
         [Fact(DisplayName = "1. Change 'AppName' displayed on About page to 'Bucket List' Tests @change-appname-to-bucketlist")]
         public void ChangeAppNameToBucketListTest()
         {
-            MockForms.Init();
-
             // Verify the overall structure has not been changed
             var label = RetrieveFirstLabel();
             var spanAppName = label?.FormattedText.Spans.Count > 0 ? label?.FormattedText.Spans[0] : null;
@@ -43,8 +46,6 @@ namespace BucketListTests
         [Fact(DisplayName = "2. Add Platform Specific environment name to Resource Dictionary Tests @add-platform-specific-name-to-resource-dictionary")]
         public void AddPlatformSpecificEnvironmentNameResourceDictionary()
         {
-            MockForms.Init();
-
             //Verify the OnPlatform element with x:Key='platformName' has been added
             var about = new BucketList.Views.AboutPage();
             Assert.True(about.Resources.ContainsKey(PLATFORM_NAME), $"The `<OnPlatform x:Key=\"{PLATFORM_NAME}\" />` element was not added to the `<ContentPage.Resources><ResourceDictionary>` collection");
