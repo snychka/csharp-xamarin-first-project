@@ -39,7 +39,7 @@
                     <Label.FormattedText>
                         <FormattedString>
                             <FormattedString.Spans>
-                                <Span Text="Bucket Name" FontAttributes="Bold" FontSize="22" />
+                                <Span Text="Bucket List" FontAttributes="Bold" FontSize="22" />
                                 <Span Text=" " />
                                 <!-- Replace with the PlatformName resource in a Span element -->
                                 <Span Text=" 1.0" ForegroundColor="{StaticResource LightTextColor}" />
