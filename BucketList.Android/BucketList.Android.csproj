@@ -15,7 +15,6 @@
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
     <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
-    <AndroidUseLatestPlatformSdk>false</AndroidUseLatestPlatformSdk>
     <TargetFrameworkVersion>v9.0</TargetFrameworkVersion>
     <AndroidEnableSGenConcurrent>true</AndroidEnableSGenConcurrent>
     <AndroidUseAapt2>true</AndroidUseAapt2>
@@ -87,7 +86,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BucketList\BucketList.csproj">
-      <Project>{57FB0933-428F-4B65-BC9A-D3A89D30639F}</Project>
+      <Project>{4769BD41-BC25-47FB-A4F2-186E7A02577C}</Project>
       <Name>BucketList</Name>
     </ProjectReference>
   </ItemGroup>
